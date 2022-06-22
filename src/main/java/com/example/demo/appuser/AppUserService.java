@@ -1,5 +1,6 @@
 package com.example.demo.appuser;
 
+import com.example.demo.email.EmailSender;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -29,41 +30,16 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, email)));
     }
 
-    public String registerUser(AppUser appUser) {
-        Optional<AppUser> existingUser = appUserRepository.findByEmail(appUser.getEmail());
+    public Optional<AppUser> getUserByEmail(String email) {
+        return appUserRepository.findByEmail(email);
+    }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-        appUser.setPassword(encodedPassword);
+    public boolean emailIsTaken(String email) {
+        return appUserRepository.findByEmail(email).isPresent();
+    }
 
-        if (existingUser.isPresent()) {
-//            AppUser existingAppUser = existingUser.get();
-//            if (existingAppUser.equals(appUser)) {
-//                if (appUser.isEnabled()) {
-//                    throw new IllegalStateException("User already registered");
-//                }
-//                String userID = existingAppUser.getId().toString();
-//
-//                Optional<ConfirmationToken> existingToken = confirmationTokenService.getTokenByUserID(userID);
-//                if (existingToken.isPresent()) {
-//                    ConfirmationToken currentToken = existingToken.get();
-//                    LocalDateTime tokenCreateTime = currentToken.getCreatedAt();
-//                    LocalDateTime emailResendTime = LocalDateTime.now().minusMinutes(EMAIL_RESEND_WAIT_TIME);
-//
-//                    if (tokenCreateTime.isBefore(emailResendTime)) {
-//
-//                    }
-//                }
-//                throw new IllegalStateException("TOKEN ALREADY SENT");
-//            }
-            throw new IllegalStateException("email is already taken");
-        }
-
-
+    public void registerUser(AppUser appUser) {
         appUserRepository.save(appUser);
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(appUser);
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        return confirmationToken.getToken();
     }
 
     public int enableAppUser(String email) {

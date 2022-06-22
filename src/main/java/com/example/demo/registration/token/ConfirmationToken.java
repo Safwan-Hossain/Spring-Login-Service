@@ -20,6 +20,9 @@ public class ConfirmationToken {
     // Default value for the number of minutes a token is valid for after being generated
     private static final int TOKEN_TIMEOUT_MINS = 15;
 
+    // Default value for the number of minutes after being generated a token can be resent to the same user
+    private static final int TOKEN_RESEND_TIMEOUT_MINS = 5;
+
     @Id
     @SequenceGenerator(
             name = "confirmation_token_sequence",
@@ -75,4 +78,13 @@ public class ConfirmationToken {
         return UUID.randomUUID().toString();
     }
 
+    public boolean isValid() {
+        return LocalDateTime.now().isBefore(this.expiresAt);
+    }
+
+    public boolean canBeResent() {
+        // The window of time a token can be resent (5 mins after being created)
+        LocalDateTime tokenResendExpiryTime = this.getCreatedAt().plusMinutes(TOKEN_RESEND_TIMEOUT_MINS);
+        return LocalDateTime.now().isBefore(tokenResendExpiryTime);
+    }
 }

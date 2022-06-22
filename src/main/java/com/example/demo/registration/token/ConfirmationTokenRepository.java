@@ -1,5 +1,6 @@
 package com.example.demo.registration.token;
 
+import com.example.demo.appuser.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,10 +17,11 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
     Optional<ConfirmationToken> findByToken(String token);
 
-
-    @Query("SELECT ConfirmationToken c " +
-            "WHERE c.confirmedAt IS NULL")
-    Optional<ConfirmationToken> findByAppUserID(String appUserID);
+    @Query(value = "SELECT c " +
+            "FROM ConfirmationToken c " +
+            "WHERE c.appUser = ?1 AND " +
+            "c.confirmedAt IS NULL")
+    List<ConfirmationToken> getAllTokensForUser(AppUser appUser);
 
     @Transactional
     @Modifying

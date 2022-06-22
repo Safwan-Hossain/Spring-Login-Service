@@ -104,8 +104,7 @@ public class AppUser implements UserDetails {
 
         return appUser.firstName.equalsIgnoreCase(this.firstName) &&
                 appUser.lastName.equalsIgnoreCase(this.lastName) &&
-                appUser.email.equalsIgnoreCase(this.email) &&
-                appUser.password.equals(this.password);
+                appUser.email.equalsIgnoreCase(this.email);
     }
 
     public boolean compareToUnsavedUser(AppUser unsavedUser, String password) {

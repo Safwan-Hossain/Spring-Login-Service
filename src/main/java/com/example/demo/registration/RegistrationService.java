@@ -8,10 +8,14 @@ import com.example.demo.email.EmailSender;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,26 +25,62 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
     private final ConfirmationTokenService confirmationTokenService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final static Long EMAIL_RESEND_WAIT_TIME = 1L;
 
     public String register(RegistrationRequest request) {
         boolean emailIsValid = emailValidator.test(request.getEmail());
+
         if (!emailIsValid) {
             throw new IllegalStateException("Email is invalid");
         }
 
 
-        String tokenValue = appUserService.registerUser(
-                new AppUser(
-                    request.getFirstName(),
-                    request.getLastName(),
-                    request.getEmail(),
-                    request.getPassword(),
-                    AppUserRole.USER
-                    )
-                );
-        String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + tokenValue;
+        String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+        AppUser newUser = new AppUser(request.getFirstName(), request.getLastName(), request.getEmail(),
+                encodedPassword, AppUserRole.USER);
+
+        Optional <AppUser> existingUser = appUserService.getUserByEmail(newUser.getEmail());
+
+        if (existingUser.isPresent()) {
+            AppUser existingAppUser = existingUser.get();
+
+            boolean passwordsAreSame =
+                    bCryptPasswordEncoder.matches(request.getPassword(), existingAppUser.getPassword());
+            boolean usersAreSame = existingAppUser.equals(newUser) && passwordsAreSame;
+
+            if (existingAppUser.isEnabled() || !usersAreSame) {
+                throw new IllegalStateException("email is already taken");
+            }
+
+            Optional<ConfirmationToken> existingToken = confirmationTokenService.getLatestToken(existingAppUser);
+            if (existingToken.isPresent()) {
+                    ConfirmationToken latestToken = existingToken.get();
+                    if (latestToken.isValid() && latestToken.canBeResent()) {
+                        // resend latest valid token
+                        String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + latestToken.getToken();
+                        emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
+                        return latestToken.getToken();
+                    }
+                    else {
+                        confirmationTokenService.deleteToken(latestToken);
+                    }
+            }
+            ConfirmationToken confirmationToken = new ConfirmationToken(existingAppUser);
+            confirmationTokenService.saveConfirmationToken(confirmationToken);
+            String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + confirmationToken.getToken();
+            emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
+            return confirmationToken.getToken();
+        }
+
+        appUserService.registerUser(newUser);
+        ConfirmationToken confirmationToken = new ConfirmationToken(newUser);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + confirmationToken.getToken();
         emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
-        return tokenValue;
+
+        return confirmationToken.getToken();
     }
 
     @Transactional
