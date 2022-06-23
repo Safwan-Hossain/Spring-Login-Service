@@ -18,11 +18,8 @@ import java.util.Optional;
 public class AppUserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MESSAGE = "User with email %s not found.";
-    private final static Long EMAIL_RESEND_WAIT_TIME = 1L;
 
     private final AppUserRepository appUserRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
