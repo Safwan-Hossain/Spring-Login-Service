@@ -5,6 +5,7 @@ import com.example.demo.appuser.AppUserRole;
 import com.example.demo.appuser.AppUserService;
 import com.example.demo.email.EmailBuilder;
 import com.example.demo.email.EmailSender;
+import com.example.demo.email.LinkBuilder;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,7 +35,6 @@ public class RegistrationService {
             throw new IllegalStateException("Email is invalid");
         }
 
-
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
         AppUser newUser = new AppUser(request.getFirstName(), request.getLastName(), request.getEmail(),
                 encodedPassword, AppUserRole.USER);
@@ -56,31 +54,33 @@ public class RegistrationService {
 
             Optional<ConfirmationToken> existingToken = confirmationTokenService.getLatestToken(existingAppUser);
             if (existingToken.isPresent()) {
-                    ConfirmationToken latestToken = existingToken.get();
-                    if (latestToken.isValid() && latestToken.canBeResent()) {
-                        // resend latest valid token
-                        String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + latestToken.getToken();
-                        emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
-                        return latestToken.getToken();
-                    }
-                    else {
-                        confirmationTokenService.deleteToken(latestToken);
-                    }
+                ConfirmationToken latestToken = existingToken.get();
+                if (latestToken.isValid() && latestToken.canBeResent()) {
+                    // resend latest valid token
+                    sendEmailToUser(latestToken, newUser);
+                    return latestToken.getToken();
+                }
+                else {
+                    confirmationTokenService.deleteToken(latestToken);
+                }
             }
             ConfirmationToken confirmationToken = new ConfirmationToken(existingAppUser);
             confirmationTokenService.saveConfirmationToken(confirmationToken);
-            String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + confirmationToken.getToken();
-            emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
+            sendEmailToUser(confirmationToken, existingAppUser);
             return confirmationToken.getToken();
         }
 
         appUserService.registerUser(newUser);
+
         ConfirmationToken confirmationToken = new ConfirmationToken(newUser);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        String verificationLink = "http://localhost:8080/api/v1/registration/confirm?token=" + confirmationToken.getToken();
-        emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), verificationLink));
-
+        sendEmailToUser(confirmationToken, newUser);
         return confirmationToken.getToken();
+    }
+
+    private void sendEmailToUser(ConfirmationToken token, AppUser user) {
+        String verificationLink = LinkBuilder.getTokenVerificationLink(token.getToken());
+        emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
     }
 
     @Transactional
