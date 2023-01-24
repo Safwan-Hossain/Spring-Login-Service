@@ -8,16 +8,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * This class is used to access the repository of existing users (AppUser entities).
+ */
 @Repository
 @Transactional(readOnly = true)
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
+    /**
+     * This query is used to find the user's information (AppUser entity) in the database by using their email as a key.
+     * If the email is not found in the database then an empty Optional object will be returned.
+     * @param email the email of the user
+     * @return an Optional AppUser. If a matching email is found then the AppUser will be wrapped inside the Optional object.
+     * Otherwise, the Optional object will be empty.
+     */
     Optional<AppUser> findByEmail(String email);
 
+    /**
+     * When a user confirms their registration, this query will be used to enable their account.
+     * The user is identified by the given email address. If the email address is not found in the database then no user will
+     * be updated.
+     * @param email the email of the user
+     * @return the number of rows that were updated. TODO - check if correct
+     */
     @Transactional
     @Modifying
     @Query("UPDATE AppUser a " +
-            "SET a.enabled = TRUE " +
+            "SET a.isEnabled = TRUE " +
             "WHERE a.email = ?1")
     int enableAppUser(String email);
 }

@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Configuration for spring web security
+ * @implNote Currently extending WebSecurityConfigurerAdapter which is deprecated. Will implement a more updated configuration.
+ */
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -21,6 +25,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final String PERMITTED_URL_PATTERN = "/api/v*/registration/**";
     private final String SUCCESS_PAGE_URL = "/homepage.html";
 
+    /**
+     * Configuration for Spring Web Security. Permits any request from the given URL pattern.
+     * CSRF protection is currently disabled so that POST requests are not rejected.
+     * @param http the {@link HttpSecurity} to modify
+     * @throws Exception if an error occurs (specifically in {@link HttpSecurity#csrf() http.csrf()})
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -34,11 +44,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl(SUCCESS_PAGE_URL, true);
     }
 
+    /**
+     * Configuration for AuthenticationManagerBuilder. Uses DaoAuthenticationProvider as provider.
+     * @param auth the {@link AuthenticationManagerBuilder} to use
+     */
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
+    /**
+     * Setup and return DaoAuthenticationProvider. Sets the password encoder and users details service for
+     * the provider.
+     * @return a DaoAuthenticationProvider Bean
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

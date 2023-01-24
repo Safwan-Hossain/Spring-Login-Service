@@ -11,17 +11,34 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * This class is an implementation for an EmailSender service. This will be used to send verification emails to the user
+ * so that they can enable their account.
+ */
 @Service
 @AllArgsConstructor
 public class EmailService implements EmailSender{
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+    /**
+     * The error message to be thrown if an email fails to send.
+     */
     private final static String FAILED_TO_SEND_MESSAGE = "Failed to send email";
+    /**
+     * The subject header for the emails.
+     */
     private final static String SUBJECT_TEXT = "Safwan - Confirm your email";
-    private final static String SENDER_ADDRESS = "springloginservice@gmail.com";
+
+//    private final static String SENDER_ADDRESS = "springloginservice@gmail.com";
 
     private final JavaMailSender mailSender;
 
+    /**
+     * This method will send an email with the specified message as the body to the recipient's email address.
+     * The email's subject header is defined by a constant value so that every sent will have the same subject.
+     * @param receiverAddress the email address of the recipient (the user)
+     * @param message the text that is to be contained in the body of the email
+     */
     @Override
     @Async
     public void send(String receiverAddress, String message) {
@@ -35,7 +52,7 @@ public class EmailService implements EmailSender{
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            LOGGER.error(FAILED_TO_SEND_MESSAGE);
+//            LOGGER.error(FAILED_TO_SEND_MESSAGE); TODO - Remove logging
             throw new IllegalStateException(FAILED_TO_SEND_MESSAGE);
         }
     }
