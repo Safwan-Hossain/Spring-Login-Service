@@ -18,17 +18,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
+    private final String PERMITTED_URL_PATTERN = "/api/v*/registration/**";
+    private final String SUCCESS_PAGE_URL = "/homepage.html";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/api/v*/registration/**")
+                .antMatchers(PERMITTED_URL_PATTERN)
                 .permitAll()
             .anyRequest()
             .authenticated().and()
-            .formLogin();
+            .formLogin()
+                .defaultSuccessUrl(SUCCESS_PAGE_URL, true);
     }
 
     @Override
