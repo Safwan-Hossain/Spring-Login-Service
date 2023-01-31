@@ -1,6 +1,6 @@
-package com.example.demo.security.config;
+package com.login.demo.security.config;
 
-import com.example.demo.appuser.AppUserService;
+import com.login.demo.appuser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
     private final String PERMITTED_URL_PATTERN = "/api/v*/registration/**";
-    private final String SUCCESS_PAGE_URL = "/homepage.html";
+    private final String SUCCESS_PAGE_URL = "/api/v1/registration/homepage";
+//    private final String SUCCESS_PAGE_URL = "/templates/homepage.html";
 
     /**
      * Configuration for Spring Web Security. Permits any request from the given URL pattern.
@@ -36,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers(PERMITTED_URL_PATTERN)
+                .antMatchers(PERMITTED_URL_PATTERN, "/stylesheets/**")
                 .permitAll()
             .anyRequest()
             .authenticated().and()

@@ -1,7 +1,7 @@
-package com.example.demo.email;
+package com.login.demo.email;
 
 
-import com.example.demo.registration.token.ConfirmationToken;
+import com.login.demo.registration.token.ConfirmationToken;
 
 /**
  * This class will create the URLs that are to be sent to the user so that they can verify their account.
@@ -21,7 +21,7 @@ public class LinkBuilder {
      * user is clicking the link. This way, the user does not need to log in again after clicking the confirmation link.
      * @param tokenValue The string value of the token for the specified user.
      * @return A string value for the verification link
-     * @see com.example.demo.registration.token.ConfirmationToken
+     * @see ConfirmationToken
      */
     public static String getTokenVerificationLink(String tokenValue) {
         return VERIFICATION_URL_PREFIX + tokenValue;

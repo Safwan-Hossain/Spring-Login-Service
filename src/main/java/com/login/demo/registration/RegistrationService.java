@@ -1,14 +1,16 @@
-package com.example.demo.registration;
+package com.login.demo.registration;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserRole;
-import com.example.demo.appuser.AppUserService;
-import com.example.demo.email.EmailBuilder;
-import com.example.demo.email.EmailSender;
-import com.example.demo.email.LinkBuilder;
-import com.example.demo.registration.token.ConfirmationToken;
-import com.example.demo.registration.token.ConfirmationTokenService;
+import com.login.demo.appuser.AppUser;
+import com.login.demo.appuser.AppUserRole;
+import com.login.demo.appuser.AppUserService;
+import com.login.demo.config.ConfigProperties;
+import com.login.demo.email.EmailBuilder;
+import com.login.demo.email.EmailSender;
+import com.login.demo.email.LinkBuilder;
+import com.login.demo.registration.token.ConfirmationToken;
+import com.login.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,8 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class RegistrationService {
-
+//    @Autowired
+    private final ConfigProperties configProperties;
     private final AppUserService appUserService;
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
@@ -82,7 +85,7 @@ public class RegistrationService {
             // If the existing user is not enabled and is the same as the requesting user,
             // this means that the requesting user is requesting their token to be resent.
             // If current token can be resent, resend the token. Otherwise, send a new token.
-            return sendExistingOrNewTokenToUser(existingAppUser).getToken();
+            return sendExistingOrNewTokenToUser(existingAppUser);
         }
         appUserService.registerUser(newUser);
 
@@ -91,9 +94,9 @@ public class RegistrationService {
         // save the token to repository
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         // email the confirmation link (with the token) to the user
-        sendEmailToUser(newUser, confirmationToken);
-        return confirmationToken.getToken();
+        return sendEmailToUser(newUser, confirmationToken);
     }
+
 
     /**
      * Confirm a token given a string token value and then enable the user's account. This method will first find the
@@ -125,7 +128,7 @@ public class RegistrationService {
 
         // Set token confirmation time and enable the user's account
         confirmationTokenService.setConfirmedAt(token);
-        appUserService.enableAppUser(confirmationToken.getAppUser().getEmail());
+        appUserService.enableAppUser(confirmationToken.getAppUserOwner().getEmail());
         return "Email successfully confirmed";
     }
 
@@ -136,14 +139,13 @@ public class RegistrationService {
      * @return If the user has an existing token that can be resent, then return that token.
      * Otherwise, generate and return a new token.
      */
-    private ConfirmationToken sendExistingOrNewTokenToUser(AppUser existingAppUser) {
+    private String sendExistingOrNewTokenToUser(AppUser existingAppUser) {
         Optional<ConfirmationToken> existingToken = confirmationTokenService.getLatestToken(existingAppUser);
         if (existingToken.isPresent()) {
             ConfirmationToken latestToken = existingToken.get();
             if (latestToken.isNonExpired() && latestToken.canBeResent()) {
                 // resend latest valid token
-                sendEmailToUser(existingAppUser, latestToken);
-                return latestToken;
+                return sendEmailToUser(existingAppUser, latestToken);
             }
             else {
                 // TODO - delete all tokens that belong to the user
@@ -152,8 +154,7 @@ public class RegistrationService {
         }
         ConfirmationToken confirmationToken = new ConfirmationToken(existingAppUser);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        sendEmailToUser(existingAppUser, confirmationToken);
-        return confirmationToken;
+        return sendEmailToUser(existingAppUser, confirmationToken);
     }
 
     /**
@@ -161,9 +162,12 @@ public class RegistrationService {
      * @param user the user requesting to be registered
      * @param token the user's ConfirmationToken
      */
-    private void sendEmailToUser(AppUser user, ConfirmationToken token) {
+    private String sendEmailToUser(AppUser user, ConfirmationToken token) {
         String verificationLink = LinkBuilder.getTokenVerificationLink(token.getToken());
-        emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
+        if (configProperties.isEmailEnabled()) {
+            emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
+        }
+        return verificationLink;
     }
 
 

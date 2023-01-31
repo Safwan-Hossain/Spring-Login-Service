@@ -1,6 +1,5 @@
-package com.example.demo.appuser;
+package com.login.demo.appuser;
 
-import com.example.demo.security.PasswordEncoder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
  * This class is used to keep track of user data.
- * When a user first registers his/her information (name, email, encrypted password) is recorded into a database.
- * This information is used to identify who the current user is.
+ * When a user first registers, his/her information (name, email, encrypted password) is stored inside this model class
+ * and then recorded into a database.
  */
 @Getter
 @Setter
@@ -46,14 +45,21 @@ public class AppUser implements UserDetails {
     private String firstName;
     @EqualsAndHashCode.Include
     private String lastName;
+
+    /**
+     * The user's email is used to distinguish between other users and therefore must be unique
+     */
     @EqualsAndHashCode.Include
+    @Column(unique = true, nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
 
     /**
      * Identifies the current user's role (Admin or User).
      */
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AppUserRole appUserRole;
 
     /**
@@ -90,8 +96,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Get the user's password for the account
-     * @implNote The user's raw password should not be used when creating an AppUser instance. The password should
-     * rather be encrypted first.
+     * @implNote The user's password must be encrypted before creating an AppUser instance.
      * @return the user's password for their account
      */
     @Override
@@ -108,8 +113,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Indicates whether the user's account has expired.
-     * Currently, account expiry has not been implemented. Therefore, this method will always return true
-     * to indicate that the account is not expired.
+     * Currently, account expiry has not been implemented. Therefore, this method will always return true.
      */
     @Override
     public boolean isAccountNonExpired() {
@@ -118,7 +122,8 @@ public class AppUser implements UserDetails {
 
 
     /**
-     * Indicates if a user is locked from access to his/her account. Currently, locking is not implemented.
+     * Indicates if a user is locked from access to his/her account. Currently, locking is not implemented. Therefore,
+     * this method will always return false.
      */
     @Override
     public boolean isAccountNonLocked() {
@@ -128,8 +133,7 @@ public class AppUser implements UserDetails {
 
     /**
      * Indicates whether the user's password has expired.
-     * Currently, password expiry has not been implemented. Therefore, this method will always return true
-     * to indicate that the password is not expired.
+     * Currently, password expiry has not been implemented. Therefore, this method will always return true.
      */
     @Override
     public boolean isCredentialsNonExpired() {
@@ -138,24 +142,12 @@ public class AppUser implements UserDetails {
 
     /**
      * Indicates if the user's account is enabled. A user's account is only enabled after they confirm their
-     * account by clicking the verification link that will be emailed to them.
+     * account by clicking the verification link that will be provided to them.
      * @return true if the user's account is enabled. Otherwise, false.
-     * @implNote isEnabled is always initially set to false and is only set to true in the database level (when a user confirms their registration).
+     * @implNote isEnabled is always initially set to false and is only set to true in the database level (after a user confirms their registration).
      */
     @Override
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public boolean compareToUnsavedUser(AppUser unsavedUser, String password) {
-        if (this == unsavedUser)
-            return true;
-        if (unsavedUser == null)
-            return false;
-
-        return unsavedUser.firstName.equalsIgnoreCase(this.firstName) &&
-                unsavedUser.lastName.equalsIgnoreCase(this.lastName) &&
-                unsavedUser.email.equalsIgnoreCase(this.email) &&
-                password.equals(this.password);
     }
 }

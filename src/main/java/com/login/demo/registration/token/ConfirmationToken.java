@@ -1,6 +1,6 @@
-package com.example.demo.registration.token;
+package com.login.demo.registration.token;
 
-import com.example.demo.appuser.AppUser;
+import com.login.demo.appuser.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,16 +24,18 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Entity
 public class ConfirmationToken {
 
+
     // TODO - change these values to property files
     /**
      * Default value for the number of minutes a token is valid for after being generated
      */
-    private static final int TOKEN_TIMEOUT_MINS = 15;
+    private static final int TOKEN_TIMEOUT_MINS = 3;
 
     /**
      * Default value for the number of minutes after being generated a token can be resent to the same user
      */
-    private static final int TOKEN_RESEND_TIMEOUT_MINS = 5;
+    private static final int TOKEN_RESEND_TIMEOUT_MINS = 1;
+
 
     @Id
     @SequenceGenerator(
@@ -50,8 +52,7 @@ public class ConfirmationToken {
     /**
      * The string value of the token
      */
-//TODO - ensure that the primary key for a token is their token value
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String token;
 
     /**
@@ -86,32 +87,16 @@ public class ConfirmationToken {
             nullable = false,
             name = "app_user_id"
     )
-    private AppUser appUser; // TODO rename to appUserOwner
-
-    // TODO - remove this method
-    public ConfirmationToken(AppUser appUser, String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
-        this.appUser = appUser;
-        this.token = token;
-        this.createdAt = createdAt;
-        this.expiresAt = expiresAt;
-    }
+    private AppUser appUserOwner;
 
     /**
      * Creates an instance that automatically generates a token value, records the creation time and records the
      * expected expiry time. Assigns the owner as the user provided.
-     * @param appUser the user that owns this token
+     * @param appUserOwner the user that owns this token
      */
-    public ConfirmationToken(AppUser appUser) {
-        this.appUser = appUser;
+    public ConfirmationToken(AppUser appUserOwner) {
+        this.appUserOwner = appUserOwner;
         this.token = generateTokenValue();
-        this.createdAt = LocalDateTime.now();
-        this.expiresAt = LocalDateTime.now().plusMinutes(TOKEN_TIMEOUT_MINS);
-    }
-
-    // TODO - remove this method
-    public ConfirmationToken(AppUser appUser, String token) {
-        this.appUser = appUser;
-        this.token = token;
         this.createdAt = LocalDateTime.now();
         this.expiresAt = LocalDateTime.now().plusMinutes(TOKEN_TIMEOUT_MINS);
     }

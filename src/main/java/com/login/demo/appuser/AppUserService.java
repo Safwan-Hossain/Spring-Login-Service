@@ -1,4 +1,4 @@
-package com.example.demo.appuser;
+package com.login.demo.appuser;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * This class contains functionality for handling an AppUser that can be used by a controller.
- * Methods such as finding an existing user, registering a new user and enabling a user can be found here.
+ * This class contains functionality for handling an AppUser.
+ * Methods such as finding an existing user, registering a new user and enabling a user are defined here.
  */
 @Service
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class AppUserService implements UserDetailsService {
      * Tries to find a user in the database that matches the specified username. If the user is not found, throw an error.
      * @param email the username identifying the user whose data is required.
      * @return the AppUser entity that belongs to the user
-     * @throws UsernameNotFoundException
+     * @throws UsernameNotFoundException if the email is not found
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -44,20 +44,21 @@ public class AppUserService implements UserDetailsService {
     }
 
     /**
-     * This method is used to check if the an email is already registered to another user.
-     * TODO - is this true before or after confirmation?
+     * This method is used to check if the email is already registered to another user (including unverified users).
      * @param email the email identifying the user whose data is required.
-     * @return
+     * @return true if this email already exists. Otherwise, false.
+     * @implNote if a user registers but does NOT confirm their registration, their email will still be reserved so that
+     * another user cannot register with the same email.
      */
     public boolean emailIsTaken(String email) {
         return appUserRepository.findByEmail(email).isPresent();
     }
 
     /**
-     * This method is used to register a new user. Their data is saved into the database but their account is not enabled
+     * This method is used to register a new user. Their data is saved into the repository but their account is not enabled
      * until they confirm their email.
-     * // TODO - what happens if row already exists?
-     * @param appUser the AppUser that is to be registered/saved into the database.
+     * @param appUser the AppUser that is to be registered/saved into the repository.
+     * @throws java.sql.SQLException if the user's email already exists in the repository.
      */
     public void registerUser(AppUser appUser) {
         appUserRepository.save(appUser);
@@ -70,7 +71,6 @@ public class AppUserService implements UserDetailsService {
      * @param email the email identifying the user whose data is required.
      * @return 1 if the user is found and their values have been updated. 0 if no user is found or no values have been updated.
      * @implNote The repository does not allow multiple rows from having the same email, so a value greater than one cannot be returned.
-     * TODO - check NOTE^
      */
     public int enableAppUser(String email) {
         return appUserRepository.enableAppUser(email);

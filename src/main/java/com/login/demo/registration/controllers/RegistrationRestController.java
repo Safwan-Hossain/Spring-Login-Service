@@ -1,5 +1,7 @@
-package com.example.demo.registration;
+package com.login.demo.registration.controllers;
 
+import com.login.demo.registration.RegistrationRequest;
+import com.login.demo.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "api/v1/registration")
 @AllArgsConstructor
-public class RegistrationController {
+public class RegistrationRestController {
 
     private final RegistrationService registrationService;
+
 
     /**
      * Registers a new user using the information from the request body.
@@ -25,10 +28,12 @@ public class RegistrationController {
      * confirmation token, or if that token has already expired then a new token will be generated and emailed back.
      * See {@link RegistrationService#register(RegistrationRequest) RegistrationService.register()} for more details.
      */
-    @PostMapping
+
+    @PostMapping(path = "register")
     public String register(@RequestBody RegistrationRequest request) {
         return registrationService.register(request);
     }
+
 
     /**
      * Enables a registered user's account using their confirmation token. After a new user registers, they will be sent
@@ -39,7 +44,7 @@ public class RegistrationController {
      * @throws IllegalStateException when a user's account fails to enable. This may happen if the token does not exist,
      * if the token has already been confirmed before or if the token has expired.
      */
-    @GetMapping(path = "confirm")
+    @GetMapping(path = "register/confirm")
     public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }

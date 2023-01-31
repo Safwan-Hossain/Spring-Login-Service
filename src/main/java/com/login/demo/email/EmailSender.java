@@ -1,4 +1,4 @@
-package com.example.demo.email;
+package com.login.demo.email;
 
 /**
  * Provides functionality for sending emails.

@@ -1,4 +1,4 @@
-package com.example.demo.email;
+package com.login.demo.email;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -35,9 +35,9 @@ public class EmailService implements EmailSender{
 
     /**
      * This method will send an email with the specified message as the body to the recipient's email address.
-     * The email's subject header is defined by a constant value so that every sent will have the same subject.
+     * The email's subject header is defined by a constant value so that every email will have the same subject.
      * @param receiverAddress the email address of the recipient (the user)
-     * @param message the text that is to be contained in the body of the email
+     * @param message the body of the email (can be formatted in HTML).
      */
     @Override
     @Async
@@ -52,7 +52,6 @@ public class EmailService implements EmailSender{
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-//            LOGGER.error(FAILED_TO_SEND_MESSAGE); TODO - Remove logging
             throw new IllegalStateException(FAILED_TO_SEND_MESSAGE);
         }
     }

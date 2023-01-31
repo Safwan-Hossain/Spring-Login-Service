@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Success!</title>
+</head>
+<body style="background: lightblue">
+<div style="padding-top: 5rem; text-align: center">
+    <h1>
+        <!--/*@thymesVar id="firstName" type="String"*/-->
+        Congratulations <span style="text-transform: capitalize" th:text="*{appUser != null}? *{appUser.firstName} : ''">user</span>! You have successfully logged in &#128512
+    </h1>
+    <h2 >
+        <br>
+        <br>
+        USER DETAILS
+    </h2>
+    <table style=" font-size: 23px; text-align:left; text-transform: capitalize; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th style= "padding-right: 2em" >First Name</th>
+            <td th:text="*{appUser != null}? *{appUser.firstName} : '*user data not found*'">first name</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td th:text="*{appUser != null}? *{appUser.lastName} : '*user data not found*'">last name</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td th:text="*{appUser != null}? *{appUser.email} : '*user data not found*'" style= "text-transform: lowercase" >email@gmail.com</td>
+        </tr>
+    </table>
+</div>
+
+
+</body>
+</html>

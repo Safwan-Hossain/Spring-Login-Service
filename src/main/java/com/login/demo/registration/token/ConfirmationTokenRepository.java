@@ -1,6 +1,6 @@
-package com.example.demo.registration.token;
+package com.login.demo.registration.token;
 
-import com.example.demo.appuser.AppUser;
+import com.login.demo.appuser.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,7 +35,7 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
      */
     @Query(value = "SELECT c " +
             "FROM ConfirmationToken c " +
-            "WHERE c.appUser = ?1 AND " +
+            "WHERE c.appUserOwner = ?1 AND " +
             "c.confirmedAt IS NULL")
     List<ConfirmationToken> getAllTokensForUser(AppUser appUser);
 

@@ -1,4 +1,4 @@
-package com.example.demo.registration;
+package com.login.demo.registration;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,15 +9,14 @@ import java.util.regex.Pattern;
 /**
  * This class is used to validate an email address.
  * For example, an email without a mail server (the value after the '@' symbol e.g. gmail) or
- * an email without a domain (the value after the '.' symbol e.g. com) is invalid and should not be allowed to be
- * registered.
+ * an email without a domain (the value after the '.' symbol e.g. com) is invalid.
  */
 @Service
 @AllArgsConstructor
 public class EmailValidator implements Predicate<String>{
     /**
      * Regex that can check if an email is valid.
-     * @implNote This regex was found on stack overflow and not created by me (link provided below).
+     * @implNote This regex was found on stack overflow (link provided below).
      * @see <a href="https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression">Regex</a>
      */
     private static final Pattern validEmailRegex = Pattern.compile
@@ -32,7 +31,8 @@ public class EmailValidator implements Predicate<String>{
     /**
      * This method checks if an email is valid or not by using a regex.
      * @param emailAddress the email address that is to be validated
-     * @return true if the email address is valid (according to the regex). Otherwise, false.
+     * @return true if the email address is valid. Otherwise, false.
+     * @see #validEmailRegex
      */
     @Override
     public boolean test(String emailAddress) {
