@@ -10,7 +10,6 @@ import com.login.demo.email.LinkBuilder;
 import com.login.demo.registration.token.ConfirmationToken;
 import com.login.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,19 +37,13 @@ public class RegistrationService {
      */
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final static Long EMAIL_RESEND_WAIT_TIME = 1L;
-
     /**
      * Register a new user or resend a registered user their token. If the requesting user (the user sending the request)
      * does not exist in the database then save the user to the database, generate a token for them, and email them the token.
-     * If the requesting user does already exist then this can mean 1 of 2 things. Either the requesting user is a different
-     * person from the registered user, in which case we can throw an error. Or it can mean that the requesting user is the same
-     * user (as the registered user) and is requesting their ConfirmationToken to be resent.
+     * If the requesting user does already exist then throw an error.
      * @param request the request body
-     * @return a valid ConfirmationToken String value that belongs to the user
+     * @return a verification link for the user
      * @throws IllegalStateException if the user's email address is invalid or the email address is already taken by another user.
-     * @implNote If a user is requesting their token to be resent but their token is no longer valid, then a new token will be
-     * generated and resent to the user.
      */
     public String register(RegistrationRequest request) {
         boolean emailIsValid = emailValidator.test(request.getEmail());
@@ -66,35 +59,18 @@ public class RegistrationService {
         // Search if this email is already registered (already exists in repository)
         Optional<AppUser> existingUser = appUserService.getUserByEmail(newUser.getEmail());
         if (existingUser.isPresent()) {
-            // The requesting user is the current AppUser Object trying to make the call right now.
-            // The existing user is the AppUser Object that is found in the repository that has the same email address as the requesting user.
-            AppUser existingAppUser = existingUser.get();
-
-            // Does the requesting user (newUser) and the existing user have the same password?
-            boolean passwordsAreSame = bCryptPasswordEncoder.matches(request.getPassword(), existingAppUser.getPassword());
-            // Is the requesting user (newUser) the same as the existing user?
-            boolean usersAreSame = existingAppUser.equals(newUser) && passwordsAreSame;
-            // If the existing user is already enabled, then the email is taken
-            // If the existing user is not enabled and is a different user from the requesting user then the email is taken
-            boolean isEmailTaken = existingAppUser.isEnabled() || !usersAreSame;
-
-            if (isEmailTaken) {
-                throw new IllegalStateException("email is already taken");
-            }
-
-            // If the existing user is not enabled and is the same as the requesting user,
-            // this means that the requesting user is requesting their token to be resent.
-            // If current token can be resent, resend the token. Otherwise, send a new token.
-            return sendExistingOrNewTokenToUser(existingAppUser);
+            throw new IllegalStateException("Email is already taken");
         }
-        appUserService.registerUser(newUser);
 
+        appUserService.registerUser(newUser);
         // generate new token
         ConfirmationToken confirmationToken = new ConfirmationToken(newUser);
         // save the token to repository
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         // email the confirmation link (with the token) to the user
-        return sendEmailToUser(newUser, confirmationToken);
+        String verificationLink = LinkBuilder.getTokenVerificationLink(confirmationToken.getToken());
+        sendEmailToUser(newUser, verificationLink);
+        return verificationLink;
     }
 
 
@@ -145,7 +121,9 @@ public class RegistrationService {
             ConfirmationToken latestToken = existingToken.get();
             if (latestToken.isNonExpired() && latestToken.canBeResent()) {
                 // resend latest valid token
-                return sendEmailToUser(existingAppUser, latestToken);
+                String verificationLink = LinkBuilder.getTokenVerificationLink(latestToken.getToken());
+                sendEmailToUser(existingAppUser, verificationLink);
+                return verificationLink;
             }
             else {
                 // TODO - delete all tokens that belong to the user
@@ -154,21 +132,19 @@ public class RegistrationService {
         }
         ConfirmationToken confirmationToken = new ConfirmationToken(existingAppUser);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        return sendEmailToUser(existingAppUser, confirmationToken);
+        String verificationLink = LinkBuilder.getTokenVerificationLink(confirmationToken.getToken());
+        sendEmailToUser(existingAppUser, verificationLink);
+        return verificationLink;
     }
 
     /**
      * Generates a verification link using the user's ConfirmationToken, then emails the link to the user.
      * @param user the user requesting to be registered
-     * @param token the user's ConfirmationToken
+     * @param verificationLink the user's verification link
      */
-    private String sendEmailToUser(AppUser user, ConfirmationToken token) {
-        String verificationLink = LinkBuilder.getTokenVerificationLink(token.getToken());
+    private void sendEmailToUser(AppUser user, String verificationLink) {
         if (configProperties.isEmailEnabled()) {
             emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
         }
-        return verificationLink;
     }
-
-
 }
