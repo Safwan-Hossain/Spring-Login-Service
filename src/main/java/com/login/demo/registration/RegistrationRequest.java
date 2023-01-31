@@ -1,6 +1,9 @@
 package com.login.demo.registration;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * The request body for the registration request.

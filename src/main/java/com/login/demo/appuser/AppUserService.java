@@ -38,7 +38,6 @@ public class AppUserService implements UserDetailsService {
      * @return an AppUser entity whose email matches the specified email wrapped in an Optional object.
      * If no emails match then return an empty Optional object.
      */
-    // TODO - might need to change to use above method instead
     public Optional<AppUser> getUserByEmail(String email) {
         return appUserRepository.findByEmail(email);
     }

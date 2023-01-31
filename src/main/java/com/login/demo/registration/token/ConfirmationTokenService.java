@@ -34,7 +34,6 @@ public class ConfirmationTokenService {
      * Deletes a ConfirmationToken from the repository.
      * @param token the ConfirmationToken that is to be deleted.
      */
-    //TODO - ensure that a token is deleted by their token value
     public void deleteToken(ConfirmationToken token) {
         confirmationTokenRepository.delete(token);
     }
@@ -86,6 +85,4 @@ public class ConfirmationTokenService {
     public int setConfirmedAt(String token) {
         return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
-
-
 }

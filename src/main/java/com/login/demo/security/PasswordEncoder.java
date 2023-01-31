@@ -14,7 +14,7 @@ public class PasswordEncoder {
     /**
      * Used to get a BCryptPasswordEncoder bean that will be managed by Spring. E.g., an existing instance will
      * be returned or if no instance exists, then a new one will be constructed.
-     * @return
+     * @return instance of BCryptPasswordEncoder
      */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

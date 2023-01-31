@@ -24,16 +24,16 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Entity
 public class ConfirmationToken {
 
-
-    // TODO - change these values to property files
     /**
      * Default value for the number of minutes a token is valid for after being generated
      */
+    @Transient
     private static final int TOKEN_TIMEOUT_MINS = 3;
 
     /**
      * Default value for the number of minutes after being generated a token can be resent to the same user
      */
+    @Transient
     private static final int TOKEN_RESEND_TIMEOUT_MINS = 1;
 
 
@@ -123,7 +123,7 @@ public class ConfirmationToken {
      * is to be generated everytime the same user requests to be resent the verification link, then it will be possible to
      * generate multiple tokens for a single user in less than one minute. This is not ideal. This method will help limit
      * the amount of newly generated tokens, saving space in the token repositories.
-     * @return
+     * @return true if the token is not expired and can be resent. Otherwise, false.
      */
     public boolean canBeResent() {
         if (!isNonExpired()) {

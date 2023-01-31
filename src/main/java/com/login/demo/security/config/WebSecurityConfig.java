@@ -1,15 +1,19 @@
 package com.login.demo.security.config;
 
 import com.login.demo.appuser.AppUserService;
+import com.login.demo.registration.RegistrationController;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import static com.login.demo.constants.URLConstants.HOMEPAGE_PATH_SUBDIRECTORY;
 
 /**
  * Configuration for spring web security
@@ -22,9 +26,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
-    private final String PERMITTED_URL_PATTERN = "/api/v*/registration/**";
-    private final String SUCCESS_PAGE_URL = "/api/v1/registration/homepage";
-//    private final String SUCCESS_PAGE_URL = "/templates/homepage.html";
+    private final String PERMITTED_URL_PATTERN = "/api/v*/**";
+    private final String STYLESHEET_URL_PATTERN = "/stylesheets/**";
+
+    private final String SUCCESS_PAGE_URL = WebMvcLinkBuilder
+            .linkTo(RegistrationController.class)
+            .slash(HOMEPAGE_PATH_SUBDIRECTORY)
+            .withSelfRel()
+            .getHref();
 
     /**
      * Configuration for Spring Web Security. Permits any request from the given URL pattern.
@@ -37,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers(PERMITTED_URL_PATTERN, "/stylesheets/**")
+                .antMatchers(PERMITTED_URL_PATTERN, STYLESHEET_URL_PATTERN)
                 .permitAll()
             .anyRequest()
             .authenticated().and()
