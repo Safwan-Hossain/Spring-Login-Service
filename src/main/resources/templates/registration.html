@@ -11,14 +11,14 @@
         <h1>REGISTRATION</h1>
         <div class="formcontainer">
             <div class="container">
-                <label for="uname"><strong>First Name</strong></label>
-                <input type="text" th:field="*{firstName}" placeholder="Enter First Name" name="uname" required>
-                <label for="uname"><strong>Last Name</strong></label>
-                <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" name="uname" required>
+                <label for="uFirstName"><strong>First Name</strong></label>
+                <input type="text" th:field="*{firstName}" placeholder="Enter First Name" id="uFirstName" required>
+                <label for="uLastName"><strong>Last Name</strong></label>
+                <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" id="uLastName" required>
                 <label for="mail"><strong>E-mail</strong></label>
-                <input type="text" th:field="*{email}" placeholder="Enter E-mail. USE PROPER FORMATTING (JaneDoe@mail.com)" name="mail" required>
+                <input type="text" th:field="*{email}" placeholder="Enter E-mail. USE PROPER FORMATTING (JaneDoe@mail.com)" id="mail" required>
                 <label for="psw"><strong>Password</strong></label>
-                <input type="password" th:field="*{password}" placeholder="Enter Password" name="psw" required>
+                <input type="password" th:field="*{password}" placeholder="Enter Password" id="psw" required>
             </div>
             <button type="submit" value="Submit"><strong>SUBMIT</strong></button>
             <p class="note">
