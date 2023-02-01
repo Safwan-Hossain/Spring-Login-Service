@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Register</title>
 
-    <link rel="stylesheet" th:href="@{/stylesheets/registration.css}"/>
+    <link rel="stylesheet" href="/static/stylesheets/registration.css" th:href="@{/stylesheets/registration.css}"/>
 </head>
 <body>
     <form action="#" th:action="@{/api/v1/registration}" th:object="${registrationRequest}" method="post">
@@ -16,14 +16,17 @@
                 <label for="uname"><strong>Last Name</strong></label>
                 <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" name="uname" required>
                 <label for="mail"><strong>E-mail</strong></label>
-                <input type="text" th:field="*{email}" placeholder="Enter E-mail" name="mail" required>
+                <input type="text" th:field="*{email}" placeholder="Enter E-mail. USE PROPER FORMATTING (JaneDoe@mail.com)" name="mail" required>
                 <label for="psw"><strong>Password</strong></label>
-                <input type="text" th:field="*{password}" placeholder="Enter Password" name="psw" required>
+                <input type="password" th:field="*{password}" placeholder="Enter Password" name="psw" required>
             </div>
             <button type="submit" value="Submit"><strong>SUBMIT</strong></button>
-            <div class="container">
-                <span class="psw"><a href="#">Resend Verification Link</a></span>
-            </div>
+            <p class="note">
+                <strong>NOTE: </strong> no information will be saved (after program terminates) and no real email address is required unless the emailing function has been manually enabled (proper format is still required e.g. johndoe@mail.com).
+            </p>
+<!--            <div class="container">-->
+<!--                <span class="psw"><a href="#">Resend Verification Link</a></span>-->
+<!--            </div>-->
         </div>
     </form>
 </body>
