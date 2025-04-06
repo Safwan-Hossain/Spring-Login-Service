@@ -43,15 +43,20 @@ public class AppUser implements UserDetails {
 
     @EqualsAndHashCode.Include
     private String firstName;
+
+
     @EqualsAndHashCode.Include
     private String lastName;
 
     /**
      * The user's email is used to distinguish between other users and therefore must be unique
      */
+
     @EqualsAndHashCode.Include
     @Column(unique = true, nullable = false)
     private String email;
+
+
     @Column(nullable = false)
     private String password;
 

@@ -13,7 +13,6 @@ public class URLConstants {
 //    any HTML file)
 
 //   === PATHS AND SUBDIRECTORIES ===
-    public final static String CONTROLLER_PATH_PREFIX = "/api/v1";
     public final static String REGISTRATION_PATH_SUBDIRECTORY = "/registration";
     public final static String CONFIRMATION_PATH_SUBDIRECTORY = "/registration/confirm";
     public final static String HOMEPAGE_PATH_SUBDIRECTORY = "/homepage";

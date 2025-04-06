@@ -26,6 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
+
+    private final String LOGIN_PAGE_URL = "/login";
+
+    private final String REGISTER_PAGE_URL = "/registration";
+    private final String CONFIRMATION_PAGE_URL = "/registration/confirm";
+
     private final String PERMITTED_URL_PATTERN = "/api/v*/**";
     private final String STYLESHEET_URL_PATTERN = "/stylesheets/**";
 
@@ -46,11 +52,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers(PERMITTED_URL_PATTERN, STYLESHEET_URL_PATTERN)
+                .antMatchers(PERMITTED_URL_PATTERN,
+                        STYLESHEET_URL_PATTERN,
+                        LOGIN_PAGE_URL,
+                        REGISTER_PAGE_URL,
+                        CONFIRMATION_PAGE_URL)
                 .permitAll()
             .anyRequest()
             .authenticated().and()
             .formLogin()
+                .loginPage(LOGIN_PAGE_URL) // custom login page at /login
+                .permitAll()
                 .defaultSuccessUrl(SUCCESS_PAGE_URL, true);
     }
 

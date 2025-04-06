@@ -7,27 +7,61 @@
     <link rel="stylesheet" href="/static/stylesheets/registration.css" th:href="@{/stylesheets/registration.css}"/>
 </head>
 <body>
-    <form action="#" th:action="@{/api/v1/registration}" th:object="${registrationRequest}" method="post">
-        <h1>REGISTRATION</h1>
-        <div class="formcontainer">
-            <div class="container">
-                <label for="uFirstName"><strong>First Name</strong></label>
-                <input type="text" th:field="*{firstName}" placeholder="Enter First Name" id="uFirstName" required>
-                <label for="uLastName"><strong>Last Name</strong></label>
-                <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" id="uLastName" required>
-                <label for="mail"><strong>E-mail</strong></label>
-                <input type="text" th:field="*{email}" placeholder="Enter E-mail. USE PROPER FORMATTING (JaneDoe@mail.com)" id="mail" required>
-                <label for="psw"><strong>Password</strong></label>
-                <input type="password" th:field="*{password}" placeholder="Enter Password" id="psw" required>
+    <div class="page">
+        <form action="#" th:action="@{/api/v1/registration}" th:object="${registrationRequest}" method="post">
+            <h1>REGISTRATION</h1>
+            <div class="formcontainer">
+                <div class="container">
+                    <label for="uFirstName"><strong>First Name</strong></label>
+                    <input type="text" th:field="*{firstName}" placeholder="Enter First Name" id="uFirstName" required>
+                    <label for="uLastName"><strong>Last Name</strong></label>
+                    <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" id="uLastName" required>
+                    <label for="mail"><strong>E-mail</strong></label>
+                    <input type="text" th:field="*{email}" placeholder="Enter E-mail" id="mail" required>
+                    <label for="psw"><strong>Password</strong></label>
+                    <input type="password" th:field="*{password}" placeholder="Enter Password" id="psw" required>
+                </div>
+                <button type="submit" value="Submit"><strong>SUBMIT</strong></button>
+                <p class="note">
+                    <strong>NOTE: </strong> A real email will be sent to the email address above.
+                </p>
+    <!--            <div class="container">-->
+    <!--                <span class="psw"><a href="#">Resend Verification Link</a></span>-->
+    <!--            </div>-->
             </div>
-            <button type="submit" value="Submit"><strong>SUBMIT</strong></button>
-            <p class="note">
-                <strong>NOTE: </strong> no information will be saved (after program terminates) and no real email address is required unless the emailing function has been manually enabled (proper format is still required e.g. johndoe@mail.com).
-            </p>
-<!--            <div class="container">-->
-<!--                <span class="psw"><a href="#">Resend Verification Link</a></span>-->
-<!--            </div>-->
-        </div>
-    </form>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const emailInput = document.getElementById("mail");
+
+            const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            form.addEventListener("submit", function (e) {
+                const email = emailInput.value.trim();
+
+                if (!validEmailRegex.test(email)) {
+                    e.preventDefault(); // stop form submission
+                    showPopup("Email invalid. Please enter a valid email address");
+                    emailInput.focus();
+                }
+            });
+
+            function showPopup(message) {
+                const popup = document.createElement("div");
+                popup.classList.add("popup-error");
+                popup.innerText = message;
+                document.body.appendChild(popup);
+
+                setTimeout(() => {
+                    popup.classList.add("fade-out");
+                    setTimeout(() => popup.remove(), 500);
+                }, 3500);
+            }
+        });
+    </script>
+
 </body>
 </html>

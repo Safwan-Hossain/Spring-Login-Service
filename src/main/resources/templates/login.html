@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/stylesheets/registration.css" th:href="@{/stylesheets/registration.css}"/>
+</head>
+<body>
+<div class="page">
+    <form th:action="@{/login}" method="post" class="login-form">
+        <h1>Login</h1>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="text" name="username" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter your password" />
+        </div>
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
+
+
+        <div class="feedback error" th:if="${param.error}">
+            Invalid username or password.
+        </div>
+        <div class="feedback logout" th:if="${param.logout}">
+            You have been logged out.
+        </div>
+    </form>
+
+    <div class="register-redirect">
+        <p>Don't have an account? <a th:href="@{/registration}">Register here</a></p>
+    </div>
+
+    <div class="project-info-link">
+        <button type="button" id="openModal">About this project</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="infoModal">
+    <div class="modal-content">
+        <button class="close-btn" id="closeModal" title="Close">&times;</button>
+        <h2>Spring Boot Login Demo</h2>
+        <p>
+            A Spring Boot web application featuring secure login, email verification, and a structured MVC design with Thymeleaf.
+        </p>
+
+        <div class="note" style="margin-top: 1.25rem;">
+            <strong>How to use:</strong>
+            <ol class="note-list">
+                <li>Click "Register here" to create an account</li>
+                <li>Confirm your email via the link provided</li>
+                <li>Log in to view your user dashboard</li>
+            </ol>
+        </div>
+
+
+        <div class="see-code" style="text-align: center; margin-top: 1.5rem;">
+            <a href="https://github.com/Safwan-Hossain/Spring-Login-Service" target="_blank">
+                View Source on GitHub
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const modal = document.getElementById("infoModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtn = document.getElementById("closeModal");
+
+    openBtn.addEventListener("click", () => {
+      modal.style.display = "flex";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+</script>
+
+</body>
+
+</html>

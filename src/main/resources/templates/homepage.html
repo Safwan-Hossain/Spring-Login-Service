@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Success!</title>
+    <link rel="stylesheet" href="/static/stylesheets/registration.css" th:href="@{/stylesheets/registration.css}"/>
 </head>
-<body style="background: #DAA49A">
-<div style="padding-top: 5rem; text-align: center">
+<body>
+<div class="page success-card">
+    <div class="icon-burst">🎉</div>
     <h1>
-        <!--/*@thymesVar id="firstName" type="String"*/-->
-        Congratulations <span style="text-transform: capitalize" th:text="*{appUser != null}? *{appUser.firstName} : ''">user</span>! You have successfully logged in &#128512
+        Congratulations <span class="highlight" th:text="*{appUser != null}? *{appUser.firstName} : ''">user</span>!<br>
+        You have successfully logged in 😄
     </h1>
-    <h2 >
-        <br>
-        <br>
-        USER DETAILS
-    </h2>
-    <table style=" font-size: 23px; text-align:left; text-transform: capitalize; margin-left: auto; margin-right: auto;">
+    <h2 class="section-label">User Details</h2>
+    <table class="user-info">
         <tr>
-            <th style= "padding-right: 2em" >First Name</th>
+            <th>First Name</th>
             <td th:text="*{appUser != null}? *{appUser.firstName} : '*user data not found*'">first name</td>
         </tr>
         <tr>
@@ -26,11 +24,11 @@
         </tr>
         <tr>
             <th>Email</th>
-            <td th:text="*{appUser != null}? *{appUser.email} : '*user data not found*'" style= "text-transform: lowercase" >email@gmail.com</td>
+            <td th:text="*{appUser != null}? *{appUser.email} : '*user data not found*'" style="text-transform: lowercase;">email@gmail.com</td>
         </tr>
     </table>
+
 </div>
-
-
 </body>
+
 </html>

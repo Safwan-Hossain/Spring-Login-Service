@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static com.login.demo.constants.URLConstants.CONTROLLER_PATH_PREFIX;
 
 /**
  * MVC controller for the login/registration service. This controller will determine what should happen when
@@ -19,7 +18,6 @@ import static com.login.demo.constants.URLConstants.CONTROLLER_PATH_PREFIX;
  * redirected to a confirmation page.
  */
 @Controller
-@RequestMapping(path = CONTROLLER_PATH_PREFIX)
 @AllArgsConstructor
 public class RegistrationController {
 
@@ -79,15 +77,20 @@ public class RegistrationController {
      */
     @GetMapping(path = URLConstants.HOMEPAGE_PATH_SUBDIRECTORY)
     public String homepage(Model model) {
+        AppUser appUser = getAuthenticatedUser();
+        model.addAttribute("appUser", appUser);
+        return "homepage";
+    }
+
+
+    // Grab the currently logged in user from the security context.
+    // If the user isn't logged in or something's off, throw an access denied error
+    private AppUser getAuthenticatedUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof AppUser) {
-            model.addAttribute("appUser", principal);
+            return (AppUser) principal;
         }
-        else {
-            // If principal is null or is not an instance of AppUser then throw error
-            throw new AccessDeniedException("User information not found. Please log in.");
-        }
-        return "homepage";
+        throw new AccessDeniedException("User information not found. Please log in.");
     }
 
 }
