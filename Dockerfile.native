@@ -1,0 +1,16 @@
+FROM ghcr.io/graalvm/graalvm-ce:ol7-java17 as builder
+RUN gu install native-image
+
+WORKDIR /app
+COPY . .
+RUN ./mvnw -Pnative "-Dspring.profiles.active=postgres" -DskipTests native:compile
+
+
+FROM busybox:glibc
+WORKDIR /app
+COPY --from=builder /app/target/spring-login-service app
+
+EXPOSE 80
+ENV PORT=80
+
+ENTRYPOINT ["./app"]
