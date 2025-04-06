@@ -44,9 +44,15 @@ public class RegistrationController {
      */
     @PostMapping(path = URLConstants.REGISTRATION_PATH_SUBDIRECTORY)
     public String register(@ModelAttribute RegistrationRequest request, Model model) {
-        String verificationLink = registrationService.register(request);
-        model.addAttribute("verificationLink", verificationLink);
-        return "verification";
+        try {
+            String verificationLink = registrationService.register(request);
+            model.addAttribute("verificationLink", verificationLink);
+            return "verification";
+        } catch (IllegalStateException e) {
+            model.addAttribute("registrationRequest", request);
+            model.addAttribute("error", e.getMessage());
+            return "registration";
+        }
     }
 
 

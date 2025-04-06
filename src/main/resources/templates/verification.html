@@ -5,11 +5,15 @@
     <title>Success!</title>
     <link rel="stylesheet" href="/static/stylesheets/registration.css" th:href="@{/stylesheets/registration.css}"/>
 </head>
-    <body>
-        <div class="page">
-            <h2>
-                Please <a th:href="${verificationLink}">click here</a> to verify your account
-            </h2>
-        </div>
-    </body>
+<body>
+<div class="page">
+    <h2>
+        Please <a th:href="${verificationLink}">click here</a> to verify your account.
+    </h2>
+    <p class="note" style="margin-top: 1.5rem;">
+        A verification email has been sent to the address you provided. It contains a confirmation link to activate your account.
+        If you didn’t receive the email, you can simply use the link above.
+    </p>
+</div>
+</body>
 </html>
