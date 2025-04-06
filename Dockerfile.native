@@ -1,16 +1,33 @@
+# Build Stage
 FROM ghcr.io/graalvm/graalvm-ce:ol7-java17 as builder
+
+# Install graalvm native image tool
 RUN gu install native-image
 
+# Set working directory
 WORKDIR /app
+
+# Copy project files
 COPY . .
+
+# Build native image using Spring AOT and set active profile to postgres
 RUN ./mvnw -Pnative "-Dspring.profiles.active=postgres" -DskipTests native:compile
 
+# Runtime Stage
+FROM debian:bullseye-slim
 
-FROM busybox:glibc
+# Install required c++ library for native image
+RUN apt-get update && apt-get install -y libstdc++6 && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
 WORKDIR /app
+
+# Copy the native binary from the builder stage
 COPY --from=builder /app/target/spring-login-service app
 
+# Expose port for Azure
 EXPOSE 80
 ENV PORT=80
 
+# Start the app
 ENTRYPOINT ["./app"]
