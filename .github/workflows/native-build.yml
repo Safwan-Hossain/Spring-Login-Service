@@ -37,5 +37,5 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -f Dockerfile.native -t ${{ secrets.DOCKER_USERNAME }}/spring-login-native:latest .
+          docker build -f Dockerfile.native -t ${{ secrets.DOCKER_USERNAME }}/spring-login-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/spring-login-app:latest
