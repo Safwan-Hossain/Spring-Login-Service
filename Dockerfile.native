@@ -27,7 +27,8 @@ COPY --from=builder /app/target/spring-login-service app
 
 # Expose port for Azure
 EXPOSE 80
-ENV PORT=80
+ENV SERVER_PORT=80
 
 # Start the app
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["./app", "--server.port=80", "--spring.profiles.active=postgres"]
+
