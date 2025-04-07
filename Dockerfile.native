@@ -10,6 +10,9 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
+# Make mvnw executable
+RUN chmod +x ./mvnw
+
 # Build native image using Spring AOT and set active profile to postgres
 RUN ./mvnw -Pnative -Dspring.aot.enabled=true -Dspring.profiles.active=postgres -DskipTests native:compile
 
