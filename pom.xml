@@ -166,7 +166,9 @@
 								</goals>
 							</execution>
 						</executions>
-
+						<configuration>
+							<imageName>spring-login-service</imageName>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
