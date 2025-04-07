@@ -7,6 +7,7 @@ import com.azure.communication.email.models.EmailMessage;
 import com.azure.communication.email.models.EmailSendResult;
 import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.SyncPoller;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,11 @@ public class EmailService implements EmailSender{
      */
     private final static String SUBJECT_TEXT = "Safwan - Confirm your email";
 
+
+    @PostConstruct
+    public void init() {
+        System.out.println("EmailService initialized (email is enabled)");
+    }
 
     /**
      * This method will send an email with the specified message as the body to the recipient's email address
