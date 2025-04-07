@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import org.springframework.context.annotation.ImportRuntimeHints;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
  */
 @Getter
 @Setter
+@ImportRuntimeHints(ConfirmationTokenRuntimeHints.class)
 @NoArgsConstructor
 @Entity
 public class ConfirmationToken {
