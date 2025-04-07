@@ -98,11 +98,6 @@
 			<version>1.0.21</version>
 		</dependency>
 
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>
