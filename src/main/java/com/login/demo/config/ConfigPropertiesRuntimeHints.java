@@ -18,5 +18,11 @@ public class ConfigPropertiesRuntimeHints implements RuntimeHintsRegistrar {
                                 ExecutableMode.INVOKE
                         )
                 );
+
+        hints.resources().registerPattern("application.properties");
+        hints.resources().registerPattern("application-*.properties");
+        hints.resources().registerPattern("META-INF/native-image/**");
+
     }
+
 }

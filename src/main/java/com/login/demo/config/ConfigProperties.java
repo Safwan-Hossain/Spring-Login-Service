@@ -1,5 +1,6 @@
 package com.login.demo.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,5 +22,12 @@ public class ConfigProperties {
     @ConstructorBinding
     public ConfigProperties(boolean isEmailEnabled) {
         this.isEmailEnabled = isEmailEnabled;
+    }
+
+
+    // This is temp for azure test purposes
+    @PostConstruct
+    public void init() {
+        System.out.println("EmailService initialized (email is " + this.isEmailEnabled + ")");
     }
 }

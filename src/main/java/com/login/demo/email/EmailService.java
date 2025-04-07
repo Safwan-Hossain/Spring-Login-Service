@@ -42,11 +42,6 @@ public class EmailService implements EmailSender{
     private final static String SUBJECT_TEXT = "Safwan - Confirm your email";
 
 
-    @PostConstruct
-    public void init() {
-        System.out.println("EmailService initialized (email is enabled)");
-    }
-
     /**
      * This method will send an email with the specified message as the body to the recipient's email address
      * using Azure Communication Services
