@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 import static com.login.demo.constants.URLConstants.HOMEPAGE_PATH_SUBDIRECTORY;
 
@@ -22,7 +24,7 @@ import static com.login.demo.constants.URLConstants.HOMEPAGE_PATH_SUBDIRECTORY;
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
@@ -47,41 +49,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @param http the {@link HttpSecurity} to modify
      * @throws Exception if an error occurs (specifically in {@link HttpSecurity#csrf() http.csrf()})
      */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers(PERMITTED_URL_PATTERN,
-                        STYLESHEET_URL_PATTERN,
-                        LOGIN_PAGE_URL,
-                        REGISTER_PAGE_URL,
-                        CONFIRMATION_PAGE_URL)
-                .permitAll()
-            .anyRequest()
-            .authenticated().and()
-            .formLogin()
-                .loginPage(LOGIN_PAGE_URL) // custom login page at /login
-                .permitAll()
-                .defaultSuccessUrl(SUCCESS_PAGE_URL, true);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                PERMITTED_URL_PATTERN,
+                                STYLESHEET_URL_PATTERN,
+                                LOGIN_PAGE_URL,
+                                REGISTER_PAGE_URL,
+                                CONFIRMATION_PAGE_URL
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage(LOGIN_PAGE_URL)
+                        .defaultSuccessUrl(SUCCESS_PAGE_URL, true)
+                        .permitAll()
+                )
+                .build();
     }
 
-    /**
-     * Configuration for AuthenticationManagerBuilder. Uses DaoAuthenticationProvider as provider.
-     * @param auth the {@link AuthenticationManagerBuilder} to use
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
 
     /**
      * Setup and return DaoAuthenticationProvider. Sets the password encoder and users details service for
      * the provider.
      * @return a DaoAuthenticationProvider Bean
      */
+
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(appUserService);

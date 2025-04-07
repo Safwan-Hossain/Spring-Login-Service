@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 /**
  * This entity class is used to generate tokens that can be used to enable/verify a user's account.
