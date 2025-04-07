@@ -1,18 +1,12 @@
 package com.login.demo.email;
 
-import com.azure.communication.email.EmailClient;
-import com.azure.communication.email.EmailClientBuilder;
-import com.azure.communication.email.models.EmailAddress;
-import com.azure.communication.email.models.EmailMessage;
-import com.azure.communication.email.models.EmailSendResult;
-import com.azure.core.util.polling.PollResponse;
-import com.azure.core.util.polling.SyncPoller;
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +15,15 @@ import org.springframework.stereotype.Service;
  * so that they can enable their account.
  */
 @Service
+@RequiredArgsConstructor
 public class EmailService implements EmailSender{
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${azure.communication.email.connection-string}")
-    private String connectionString;
+    private final JavaMailSender mailSender;
 
-    @Value("${azure.communication.email.sender-address}")
-    private String senderAddress;
-
+    @Value("${email.from}")
+    private String fromAddress;
 
     /**
      * The error message to be thrown if an email fails to send.
@@ -43,32 +36,23 @@ public class EmailService implements EmailSender{
 
 
     /**
-     * This method will send an email with the specified message as the body to the recipient's email address
-     * using Azure Communication Services
+     * Sends an email via SMTP using JavaMailSender.
      *
-     * @param receiverAddress the email address of the recipient (the user)
-     * @param message the body of the email (can be formatted in plain text)
+     * @param receiverAddress the recipient's email
+     * @param message         the body of the email
      */
     @Override
     @Async
     public void send(String receiverAddress, String message) {
         try {
-            EmailClient emailClient = new EmailClientBuilder()
-                    .connectionString(connectionString)
-                    .buildClient();
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(receiverAddress);
+            mailMessage.setSubject(SUBJECT_TEXT);
+            mailMessage.setText(message);
+            mailMessage.setFrom(fromAddress);
 
-            EmailMessage emailMessage = new EmailMessage()
-                    .setSenderAddress(senderAddress)
-                    .setToRecipients(new EmailAddress(receiverAddress))
-                    .setSubject(SUBJECT_TEXT)
-                    .setBodyPlainText(message);
-
-            SyncPoller<EmailSendResult, EmailSendResult> poller = emailClient.beginSend(emailMessage);
-            PollResponse<EmailSendResult> response = poller.waitForCompletion();
-
-            String messageId = response.getValue().getId();
-            LOGGER.info("Email sent successfully. Message ID: {}", messageId);
-
+            mailSender.send(mailMessage);
+            LOGGER.info("Email sent successfully to {}", receiverAddress);
         } catch (Exception e) {
             LOGGER.error("Failed to send email to {}: {}", receiverAddress, e.getMessage(), e);
             throw new IllegalStateException(FAILED_TO_SEND_MESSAGE, e);
