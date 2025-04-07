@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 
 # Build native image using Spring AOT and set active profile to postgres
-RUN ./mvnw -Pnative "-Dspring.profiles.active=postgres" -DskipTests native:compile
+RUN ./mvnw -Pnative -Dspring.aot.enabled=true -Dspring.profiles.active=postgres -DskipTests native:compile
 
 # Runtime Stage
 FROM debian:bullseye-slim
