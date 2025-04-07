@@ -3,6 +3,7 @@ package com.login.demo.registration;
 import com.login.demo.appuser.AppUser;
 import com.login.demo.appuser.AppUserRole;
 import com.login.demo.appuser.AppUserService;
+import com.login.demo.config.ConfigProperties;
 import com.login.demo.email.EmailBuilder;
 import com.login.demo.email.EmailSender;
 import com.login.demo.registration.token.ConfirmationToken;
@@ -33,6 +34,7 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ConfigProperties config;
     /**
      * Password encryptor
      */
@@ -141,7 +143,9 @@ public class RegistrationService {
      * @param verificationLink the user's verification link
      */
     private void sendEmailToUser(AppUser user, String verificationLink) {
-        emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
+        if (config.isEmailEnabled()) {
+            emailSender.send(user.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), verificationLink));
+        }
     }
 
     /**

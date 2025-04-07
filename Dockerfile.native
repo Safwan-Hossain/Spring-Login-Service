@@ -14,7 +14,7 @@ COPY . .
 RUN chmod +x ./mvnw
 
 # Build native image using Spring AOT and set active profile to postgres
-RUN ./mvnw -Pnative -Dspring.aot.enabled=true -Dspring.profiles.active=postgres -DskipTests native:compile
+RUN ./mvnw -Pnative -Dspring.aot.enabled=true -DskipTests native:compile
 
 # Runtime Stage
 FROM debian:bullseye-slim
@@ -29,9 +29,9 @@ WORKDIR /app
 COPY --from=builder /app/target/spring-login-service app
 
 # Expose port for Azure
+ENV PORT=80
 EXPOSE 80
-ENV SERVER_PORT=80
 
 # Start the app
-ENTRYPOINT ["./app", "--server.port=80", "--spring.profiles.active=postgres"]
+ENTRYPOINT ["./app"]
 

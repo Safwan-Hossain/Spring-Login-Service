@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor
-@ConditionalOnProperty(name = "config.is-email-enabled", havingValue = "true")
 public class EmailService implements EmailSender{
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
