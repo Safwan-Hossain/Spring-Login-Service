@@ -16,6 +16,19 @@ public class EmailBuilder {
      * @return A string value that presents the user their verification link
      */
     public static String buildEmail(String recipientName, String verificationLink) {
-        return "To confirm your email please click the following link: " + verificationLink;
+        return """
+            Hey %s,
+
+            Click the link below to confirm your email:
+            %s
+            
+            If you’d prefer not to click the link, that’s totally fine, it just means your account won’t be activated.
+            Once activated, your email will be verified and you’ll be able to log in and access the dashboard.
+
+            If you didn’t try to register, you can ignore this message.
+
+            (This is an automated email - Please Do Not Reply)
+
+            """.formatted(recipientName, verificationLink);
     }
 }
