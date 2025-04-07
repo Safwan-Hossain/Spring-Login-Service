@@ -21,15 +21,12 @@ import org.springframework.stereotype.Service;
  * so that they can enable their account.
  */
 @Service
-@AllArgsConstructor
 public class EmailService implements EmailSender{
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${azure.communication.email.connection-string}")
     private String connectionString;
 
-    @Value("${azure.communication.email.sender-address}")
     private String senderAddress;
 
     /**
@@ -41,6 +38,14 @@ public class EmailService implements EmailSender{
      */
     private final static String SUBJECT_TEXT = "Safwan - Confirm your email";
 
+
+    public EmailService(
+            @Value("${azure.communication.email.connection-string}") String connectionString,
+            @Value("${azure.communication.email.sender-address}") String senderAddress
+    ) {
+        this.connectionString = connectionString;
+        this.senderAddress = senderAddress;
+    }
 
     /**
      * This method will send an email with the specified message as the body to the recipient's email address
