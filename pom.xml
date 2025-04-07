@@ -132,7 +132,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.3</version>
+				<configuration>
+					<image>
+						<builder>paketobuildpacks/builder:tiny</builder>
+					</image>
+				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -161,11 +168,16 @@
 					<plugin>
 						<groupId>org.graalvm.buildtools</groupId>
 						<artifactId>native-maven-plugin</artifactId>
-						<configuration>
-							<mainClass>com.login.demo.Application</mainClass>
-							<imageName>spring-login-service</imageName>
-						</configuration>
+						<version>0.10.1</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
