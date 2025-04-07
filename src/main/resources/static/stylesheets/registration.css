@@ -8,10 +8,9 @@
 html, body {
     height: 100%;
     font-family: 'Inter', 'Roboto', sans-serif;
-    background-color: #DAA49A;
+    background-color: #EAC4B3;
     color: #2b2b2b;
 }
-
 
 body {
     display: flex;
@@ -31,6 +30,63 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.4s ease;
 }
+
+.project-info-icons {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #333;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.icon-btn:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+#openModal {
+    background-color: #e6efff; /* soft blue background */
+    color: #2a62d0;
+    box-shadow: 0 0 0 3px rgba(198, 221, 255, 0.5); /* subtle glow */
+    animation: pulse 1.5s ease-out infinite;
+
+}
+
+#openModal:hover {
+    background-color: #d8e7ff;
+    border-color: #b1d0ff;
+    box-shadow: 0 0 0 4px rgba(178, 209, 255, 0.4);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(198, 221, 255, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(198, 221, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(198, 221, 255, 0);
+    }
+}
+
 
 @keyframes fadeIn {
     from {
@@ -436,14 +492,108 @@ table.user-info tr {
 
 @media screen and (max-width: 480px) {
     .page {
-        padding: 2rem 1.5rem;
+        padding: 2rem 1rem;
+        max-width: 95%;
+    }
+
+
+    h1 {
+        font-size: 1.3rem;
+        line-height: 1.3;
+    }
+
+    h2 {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    input,
+    button {
+        font-size: 0.95rem;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    .note {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        padding: 1rem;
+    }
+
+    a {
+        word-break: break-word;
+    }
+
+    .register-redirect,
+        .project-info-link {
+            font-size: 0.95rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .modal-content {
+            width: 90%;
+            padding: 1.5rem;
+        }
+
+        .close-btn {
+            top: 8px;
+            right: 10px;
+        }
+}
+
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .page {
+        padding: 2.5rem 1.25rem;
+        max-width: 90%;
     }
 
     h1 {
         font-size: 1.5rem;
+        line-height: 1.4;
     }
 
     h2 {
         font-size: 1.1rem;
+        line-height: 1.5;
+    }
+
+    input,
+    button {
+        font-size: 1rem;
+    }
+
+    label {
+        font-size: 0.95rem;
+    }
+}
+
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .page {
+        padding: 3rem 2rem;
+        max-width: 85%;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        line-height: 1.5;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
+
+    input,
+    button {
+        font-size: 1.05rem;
+    }
+
+    label {
+        font-size: 1rem;
     }
 }
