@@ -16,19 +16,29 @@ public class EmailBuilder {
      * @return A string value that presents the user their verification link
      */
     public static String buildEmail(String recipientName, String verificationLink) {
+        String capitalized = capitalize(recipientName);
+
         return """
-            Hey %s,
+            <html>
+              <body style="font-family: sans-serif; color: #333; line-height: 1.6;">
+                <p style="font-size: small; color: #888;">This is an automated email – please do not reply.</p>
+                <p>Hey %s,</p>
+                <p>Please confirm your email by clicking the link below:</p>
+                <p><a href="%s">%s</a></p>
+                <p>If you’d prefer not to click the link, that’s totally fine, it just means your account won’t be activated.</p>
+                <p>Once activated, your email will be verified and you’ll be able to log in and access the dashboard.</p>
+                <p>If you didn’t try to register, you can safely ignore this email</p>
+              </body>
+            </html>
+            """.formatted(capitalized, verificationLink, verificationLink);
+    }
 
-            Click the link below to confirm your email:
-            %s
-            
-            If you’d prefer not to click the link, that’s totally fine, it just means your account won’t be activated.
-            Once activated, your email will be verified and you’ll be able to log in and access the dashboard.
 
-            If you didn’t try to register, you can ignore this message.
+//  Capitalizes the first letter of a string.
+//  If the input is null or empty, returns an empty string
 
-            (This is an automated email - Please Do Not Reply)
-
-            """.formatted(recipientName, verificationLink);
+    private static String capitalize(String name) {
+        if (name == null || name.isEmpty()) return "";
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 }
