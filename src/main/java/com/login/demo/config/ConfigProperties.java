@@ -23,11 +23,4 @@ public class ConfigProperties {
     public ConfigProperties(boolean isEmailEnabled) {
         this.isEmailEnabled = isEmailEnabled;
     }
-
-
-    // This is temp for azure test purposes
-    @PostConstruct
-    public void init() {
-        System.out.println("EmailService initialized (email is " + this.isEmailEnabled + ")");
-    }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -39,7 +38,7 @@ public class EmailService implements EmailSender{
      * Sends an email via SMTP using JavaMailSender.
      *
      * @param receiverAddress the recipient's email
-     * @param message         the body of the email
+     * @param message the body of the email
      */
     @Override
     @Async
