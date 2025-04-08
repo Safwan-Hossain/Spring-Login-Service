@@ -62,31 +62,50 @@ body {
 }
 
 #openModal {
-    background-color: #e6efff; /* soft blue background */
+    background-color: #e6efff;
     color: #2a62d0;
-    box-shadow: 0 0 0 3px rgba(198, 221, 255, 0.5); /* subtle glow */
-    animation: pulse 1.5s ease-out infinite;
-
+    box-shadow: 0 0 0 4px rgba(198, 221, 255, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+    transition: box-shadow 0.3s ease;
 }
 
 #openModal:hover {
     background-color: #d8e7ff;
     border-color: #b1d0ff;
     box-shadow: 0 0 0 4px rgba(178, 209, 255, 0.4);
+    animation-play-state: paused;
+
 }
+
+.credit {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+}
+
+.credit a {
+    color: #5e89fa;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.credit a:hover {
+    text-decoration: underline;
+}
+
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(198, 221, 255, 0.5);
+        box-shadow: 0 0 0 0 rgba(178, 209, 255, 0.35);
     }
-    70% {
-        box-shadow: 0 0 0 8px rgba(198, 221, 255, 0);
+    50% {
+        box-shadow: 0 0 0 6px rgba(178, 209, 255, 0.12);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(198, 221, 255, 0);
+        box-shadow: 0 0 0 0 rgba(178, 209, 255, 0.35);
     }
 }
-
 
 @keyframes fadeIn {
     from {
