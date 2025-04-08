@@ -21,13 +21,12 @@ public class EmailBuilder {
         return """
             <html>
               <body style="font-family: sans-serif; color: #333; line-height: 1.6;">
-                <p style="font-size: small; color: #888;">This is an automated email – please do not reply.</p>
                 <p>Hey %s,</p>
                 <p>Please confirm your email by clicking the link below:</p>
                 <p><a href="%s">%s</a></p>
                 <p>If you’d prefer not to click the link, that’s totally fine, it just means your account won’t be activated.</p>
                 <p>Once activated, your email will be verified and you’ll be able to log in and access the dashboard.</p>
-                <p>If you didn’t try to register, you can safely ignore this email</p>
+                <p style="font-size: small; color: #888;">This is an automated email – please do not reply.</p>
               </body>
             </html>
             """.formatted(capitalized, verificationLink, verificationLink);
