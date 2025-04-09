@@ -39,7 +39,7 @@ I built this project to get hands-on experience with a production grade Java sta
 ## 🌐 Live Demo
 You can try the live version of this app here: 
 <img src="./docs/images/point.webp" alt="👉" width="25" height="25" style="vertical-align: bottom;" /> 
-[**springlogin.hossainsafwan.com**](https://springlogin.hossainsafwan.com)
+[**https://login.hossainsafwan.com**](https://login.hossainsafwan.com)
 
 ## 📌 Why It Matters
 
