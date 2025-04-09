@@ -1,70 +1,100 @@
-# SpringLoginService
-Uses Spring framework to create a user registration/login application. 
-Includes REST API calls and token generation.
+# Spring Login Service <img src="./docs/images/lock.webp" alt="🔒" width="50" style="vertical-align: bottom;" />
 
-## Overview
-In this application, a user must first register for an account through
-a form. After they register, they will be given a unique verification link. Once they
-click the verification link, their account will be verified, and they may log in using
-their credentials. If their account is not registered or verified they will not
-be able to log in.
+![Dockerized](https://img.shields.io/badge/Dockerized-Yes-blue?logo=docker&style=flat-square)
+![Azure](https://img.shields.io/badge/Deployed-Azure-blue?logo=microsoft-azure&style=flat-square)
+![Last Commit](https://img.shields.io/github/last-commit/Safwan-Hossain/Spring-Login-Service?label=Last%20Commit&style=flat-square&logo=git)
+[![Build](https://img.shields.io/github/actions/workflow/status/Safwan-Hossain/Spring-Login-Service/native-build.yml?label=Build&logo=github&style=flat-square)](https://github.com/Safwan-Hossain/Spring-Login-Service/actions)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.3-brightgreen?style=flat-square&logo=spring)
+> End-to-end Spring Boot login & registration system with email verification, PostgreSQL persistence, Dockerized native builds, and Azure deployment.
 
-## How To Use
+---
 
-1. Run the Program
-2. Go to the following URL (please see note below): http://localhost:8080/api/v1/registration
-3. Submit the form presented
-4. After submitting, you will be given a verification link. Click the link to verify your account
-5. Once your account is verified you may now log in
-
-**_NOTE:_**  If you changed the default port number you will have to change the
-URL port as well. Use the link pattern `http://localhost:[PORT NUMBER]/api/v1/registration`
-
-#### URL PATTERNS 
-Registration- `http://localhost:[PORT NUMBER]/api/v1/registration`
-\
-Log In - `http://localhost:[PORT NUMBER]/login`
-
-## Setup
-There is no setup required for this application. If one desires for added functionality or if the 
-default port (8080) is not available, please follow the below setups
-### Port Change (Optional)
-1. Go to **application.properties**
-2. Change the port number (**server.port** value) to a free port
-3. You may now run the program (**Application.java**)
-
-**_NOTE:_** If you desire to use added functionality you may
-follow the below setups.
-
-### PostgreSQL Setup (Optional)
-
-This application was originally designed with PostgreSQL, but now supports in-memory databases as well. 
-If one wishes to use PostgreSQL however, do the following:
-1. Go to **application.properties** 
-2. Enable (un-comment) the paragraph under the commented headline: `==== POSTGRESQL CONFIGURATION ====`
-3. Disable (comment) the paragraph under the commented headline: `==== H2 CONFIGURATION ====`
+A Spring Boot project focusing on secure login, email verification, and role based access control.  
+Runs on a **PostgreSQL** database (deployed on **Azure**) and uses **GraalVM native images** for performance.  
+GitHub Actions handles the **CI/CD** pipeline, automatically building and deploying **Docker** images to **Azure**.
+---
 
 
-### Email Setup (Optional)
-In the original design, after a user registers, they were sent a verification link to
-their email. But to send an email, the program's email address password
-needed to be stored in the **application.properties** file. This is a security risk. In the future, there will be
-another application on a public server running, where it will send an email via a POST call.
+<img src="./docs/images/demo.webp" alt="UI Demo" width="100%"/>
+
+## 📚 Table of Contents
+
+- [Overview](#-overview)
+- [Live Demo](#-live-demo)
+- [Why It Matters](#-why-it-matters)
+- [Getting Started](#-getting-started)
+- [Configuration](#-configuration)
+
+## 💼 Overview
+
+- **CI/CD automation**: Built a GitHub Actions pipeline to compile GraalVM native images and deploy Docker containers to
+  Docker Hub and Azure App Service
+- **Spring Security**: Managed authentication, password encryption (BCrypt), and role based access control
+- **Native Image Builds**: Leveraged GraalVM & Spring AOT for significantly optimized runtime performance
+- **Database Integration**: Connection to PostgreSQL on Azure using Spring Data JPA
+- **Email SMTP**: Asynchronous sending of account confirmation links
+
+I built this project to get hands-on experience with a production grade Java stack used in real world backend systems
+
+## 🌐 Live Demo
+You can try the live version of this app here: 
+<img src="./docs/images/point.webp" alt="👉" width="25" height="25" style="vertical-align: bottom;" /> 
+[**springlogin.hossainsafwan.com**](https://springlogin.hossainsafwan.com)
+
+## 📌 Why It Matters
+
+- Demonstrates a secure, production ready setup 
+- Configured for real world cloud environments with proper handling of secrets via environment variables
+- Built to scale, with features like login, email confirmation, and performance focused native builds
+
+## 📦 Getting Started
+
+To run the app locally:
+
+```bash
+# Clone the repo
+git clone https://github.com/Safwan-Hossain/Spring-Login-Service.git
+
+# Enter the directory
+cd Spring-Login-Service
+
+# Run with Maven (ensure port 8080 is free)
+./mvnw spring-boot:run
+```
+Once the app is running, go to [http://localhost:8080/login](http://localhost:8080/login) to access the login page.
 
 
-If you wish to use your own email address (as the sender) do as follows:
-1. Go to **application.properties**
-2. Go to the section under the commented headline: `==== EMAIL CONFIGURATION ====`
-3. Set up the host, username and password values
-4. Change `config.is-email-enabled=false` to `config.is-email-enabled=true`
+## ⚙️ Configuration
 
+Configuration settings are organized across these property files:
 
-## Future Plans
-The aim for this program is to eventually turn this into a full stack application with more functionality than just 
-simple login and registration.
+|  File | Purpose                                              |
+|--------|------------------------------------------------------|
+| [`application.properties`](./src/main/resources/application.properties) | Shared default properties                            |
+| [`application-local.properties`](./src/main/resources/application-local.properties) | Uses H2 Database and disables email sending          |
+| [`application-prod.properties`](./src/main/resources/application-prod.properties) | For Production (PostgreSQL on Azure + Email Service) |
 
-### Next Updates
-- Add unit tests
-- Add integration tests
-- Add error handling 
-- Create a public server (for emailing only) so that emails may be safely sent without needing configuration
+---
+
+### 🔧 Default Behavior (Local)
+
+By default, when you run the app locally:
+- The **`local` profile** is active
+- The app uses **H2 database (in memory)**
+- **Email sending is disabled**
+
+---
+
+### 📧 To Enable PostgreSQL & Email
+
+Update the following files:
+
+- [`application.properties`](./src/main/resources/application.properties)
+- [`application-local.properties`](./src/main/resources/application-local.properties)
+
+Key configuration options include:
+
+- `spring.datasource.*` -> PostgreSQL connection settings
+- `email.enabled` -> `true` to enable email confirmation
+- `spring.mail.*` -> SMTP server credentials
+- `email.from` -> The sender email address for outgoing mail
