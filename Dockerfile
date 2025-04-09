@@ -20,7 +20,6 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Azure
-ENV PORT=80
 EXPOSE 80
 
-ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
