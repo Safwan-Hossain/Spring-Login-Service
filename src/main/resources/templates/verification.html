@@ -9,11 +9,10 @@
 <body>
 <div class="page">
     <h2>
-        Please <a th:href="${verificationLink}">click here</a> to verify your account.
+        Please check your email for a confirmation link to activate your account
     </h2>
     <p class="note" style="margin-top: 1.5rem;">
-        A verification email has been sent to the address you provided. It contains a confirmation link to activate your account.
-        If you didn’t receive the email, you can simply use the link above.
+        If you didn’t receive the email, you can simply <a th:href="${verificationLink}">click here</a> to verify your account
     </p>
 </div>
 </body>
