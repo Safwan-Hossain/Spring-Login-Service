@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation Error</title>
+    <link rel="stylesheet"
+          th:href="@{/stylesheets/registration.css}"
+          href="/static/stylesheets/registration.css" />
+    <script src="https://kit.fontawesome.com/318e4ccccd.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="page">
+        <div class="error-card">
+            <div class="error-heading">
+                <span class="error-icon">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </span>
+                <h1>Oops! Something went wrong</h1>
+            </div>
+
+            <div class="feedback error" th:if="${error}" th:text="${error}">
+                The confirmation token is invalid or expired.
+            </div>
+
+            <div class="register-redirect">
+                <p>
+                    Want to try again? <a th:href="@{/registration}">Register a new account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

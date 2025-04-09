@@ -66,9 +66,14 @@ public class RegistrationController {
      * if the token has already been confirmed before or if the token has expired.
      */
     @GetMapping(path = URLConstants.CONFIRMATION_PATH_SUBDIRECTORY)
-    public String confirm(@RequestParam(URLConstants.TOKEN_REQ_PARAMETER) String token) {
-        registrationService.confirmToken(token);
-        return "confirmation-success";
+    public String confirm(@RequestParam(URLConstants.TOKEN_REQ_PARAMETER) String token, Model model) {
+        try {
+            registrationService.confirmToken(token);
+            return "confirmation-success";
+        } catch (IllegalStateException e) {
+            model.addAttribute("error", e.getMessage());
+            return "confirmation-error";
+        }
     }
 
 
