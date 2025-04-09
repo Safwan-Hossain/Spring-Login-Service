@@ -2,8 +2,8 @@
 
 ![Dockerized](https://img.shields.io/badge/Dockerized-Yes-blue?logo=docker&style=flat-square)
 ![Azure](https://img.shields.io/badge/Deployed-Azure-blue?logo=microsoft-azure&style=flat-square)
-![Last Commit](https://img.shields.io/github/last-commit/Safwan-Hossain/Spring-Login-Service?label=Last%20Commit&style=flat-square&logo=git)
 [![Build](https://img.shields.io/github/actions/workflow/status/Safwan-Hossain/Spring-Login-Service/native-build.yml?label=Build&logo=github&style=flat-square)](https://github.com/Safwan-Hossain/Spring-Login-Service/actions)
+![Last Commit](https://img.shields.io/github/last-commit/Safwan-Hossain/Spring-Login-Service?label=Last%20Commit&style=flat-square&logo=git)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.3-brightgreen?style=flat-square&logo=spring)
 > End-to-end Spring Boot login & registration system with email verification, PostgreSQL persistence, Dockerized native builds, and Azure deployment.
 
@@ -12,8 +12,8 @@
 A Spring Boot project focusing on secure login, email verification, and role based access control.  
 Runs on a **PostgreSQL** database (deployed on **Azure**) and uses **GraalVM native images** for performance.  
 GitHub Actions handles the **CI/CD** pipeline, automatically building and deploying **Docker** images to **Azure**.
----
 
+---
 
 <img src="./docs/images/demo.webp" alt="UI Demo" width="100%"/>
 
