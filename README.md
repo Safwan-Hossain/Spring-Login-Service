@@ -37,8 +37,8 @@ GitHub Actions handles the **CI/CD** pipeline, automatically building and deploy
 I built this project to get hands-on experience with a production grade Java stack used in real world backend systems
 
 ## 🌐 Live Demo
-You can try the live version of this app here: 
-<img src="./docs/images/point.webp" alt="👉" width="25" height="25" style="vertical-align: bottom;" /> 
+You can try the live version of this app here:
+<sub><img src="./docs/images/point.webp" alt="👉" width="22" height="22" /></sub>
 [**https://login.hossainsafwan.com**](https://login.hossainsafwan.com)
 
 ## 📌 Why It Matters
