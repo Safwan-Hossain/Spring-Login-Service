@@ -3,6 +3,9 @@ name: Push Native Image to Docker
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
 
 jobs:
   build-native:
