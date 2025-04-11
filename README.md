@@ -24,6 +24,7 @@
 - [Why It Matters](#-why-it-matters)
 - [Getting Started](#-getting-started)
 - [Configuration](#-configuration)
+- [Future Updates](#-future-updates)
 
 ## 💼 Overview
 
@@ -100,3 +101,11 @@ Key configuration options include:
 - `email.enabled` -> `true` to enable email confirmation
 - `spring.mail.*` -> SMTP server credentials
 - `email.from` -> The sender email address for outgoing mail
+
+## 🔮 Future Updates
+
+Planned improvements for future:
+
+- **OAuth2 Login**: Support Google login alongside email/password
+- **Unit Testing**: Add JUnit tests using Jacoco for code coverage
+- **Error Pages**: Improve feedback with more custom error views
