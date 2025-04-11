@@ -9,9 +9,9 @@
 
 ---
 
-A Spring Boot project focusing on secure login, email verification, and role based access control.  
-Runs on a **PostgreSQL** database (deployed on **Azure**) and uses **GraalVM native images** for performance.  
-GitHub Actions handles the **CI/CD** pipeline, automatically building and deploying **Docker** images to **Azure**.
+- A Spring Boot project focusing on secure login, email verification, and role based access control.  
+- Runs on a **PostgreSQL** database (deployed on **Azure**) and uses **GraalVM native images** for performance.  
+- GitHub Actions handles the **CI/CD** pipeline, automatically building and deploying **Docker** images to **Azure**.
 
 ---
 
