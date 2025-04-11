@@ -5,7 +5,7 @@
 [![Build](https://img.shields.io/github/actions/workflow/status/Safwan-Hossain/Spring-Login-Service/native-build.yml?label=Build&logo=github&style=flat-square)](https://github.com/Safwan-Hossain/Spring-Login-Service/actions)
 ![Last Commit](https://img.shields.io/github/last-commit/Safwan-Hossain/Spring-Login-Service?label=Last%20Commit&style=flat-square&logo=git)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.3-brightgreen?style=flat-square&logo=spring)
-> End-to-end Spring Boot login & registration system with email verification, PostgreSQL persistence, Dockerized native builds, and Azure deployment.
+> Production ready Spring Boot login system with email verification, PostgreSQL persistence, Docker native builds, and Azure deployment
 
 ---
 
@@ -48,6 +48,8 @@ You can try the live version of this app here:
 - Built to scale, with features like login, email confirmation, and performance focused native builds
 
 ## 📦 Getting Started
+
+### Make sure Java 17+ and Maven are installed
 
 To run the app locally:
 
