@@ -28,3 +28,12 @@ jobs:
       - name: Push image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/spring-login-app:latest
+          
+  deploy-to-azure:
+    needs: build-native
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger azure webhook
+        run: |
+          curl -X POST "${{ secrets.AZURE_WEBHOOK_URL }}"
