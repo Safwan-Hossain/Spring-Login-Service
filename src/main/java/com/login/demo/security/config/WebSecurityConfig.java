@@ -29,12 +29,13 @@ public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AppUserService appUserService;
 
+    private final String ACTUATOR_URL_PATTERN = "/actuator/**";
     private final String LOGIN_PAGE_URL = "/login";
 
     private final String REGISTER_PAGE_URL = "/registration";
     private final String CONFIRMATION_PAGE_URL = "/registration/confirm";
 
-    private final String PERMITTED_URL_PATTERN = "/api/v*/**";
+    private final String PERMITTED_URL_PATTERN = "/api/v*/**"; // Used previously by rest controllers.
     private final String STYLESHEET_URL_PATTERN = "/stylesheets/**";
 
     private final String SUCCESS_PAGE_URL = WebMvcLinkBuilder
@@ -56,6 +57,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 PERMITTED_URL_PATTERN,
+                                ACTUATOR_URL_PATTERN,
                                 STYLESHEET_URL_PATTERN,
                                 LOGIN_PAGE_URL,
                                 REGISTER_PAGE_URL,
