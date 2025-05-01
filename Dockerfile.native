@@ -28,7 +28,7 @@ WORKDIR /app
 # Copy the native binary from the builder stage
 COPY --from=builder /app/target/spring-login-service app
 
-# Expose port for Azure
+
 ENV PORT=80
 EXPOSE 80
 
